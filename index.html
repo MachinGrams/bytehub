@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Steal a Brainrot - Redeem Key</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    body {
+      background: url('brainrot.png') no-repeat center center/cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: white;
+      text-shadow: 0 0 20px #ff2e2e, 0 0 40px #ff6b6b;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff2e2e, 0 0 20px #ff6b6b; }
+      to { text-shadow: 0 0 30px #ff2e2e, 0 0 60px #ff6b6b; }
+    }
+
+    button {
+      margin-top: 30px;
+      padding: 15px 35px;
+      font-size: 1.2rem;
+      color: white;
+      background: linear-gradient(90deg, #ff2e2e, #ff6b6b, #ff2e2e);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      box-shadow: 0 0 20px #ff6b6b;
+      animation: moveButton 4s ease-in-out infinite;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 40px #ff0000;
+    }
+
+    @keyframes moveButton {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: scale(0.9);
+      animation: fadeIn 1.5s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1 class="fade-in">Toca para reclamar tu key del script de<br> <span style="color:#ffb3b3;">Steal a Brainrot</span></h1>
+  <button class="fade-in" style="animation-delay: 0.5s;" onclick="goToLink()">🎁 Obtener Key</button>
+
+  <script>
+    function goToLink() {
+      // efecto antes de redirigir
+      document.body.style.transition = "opacity 0.5s ease";
+      document.body.style.opacity = "0";
+      setTimeout(() => {
+        window.location.href = "https://www.roblox.com/share?code=fed45ce922347c4abd9ef062b9cb5224&type=Server";
+      }, 500);
+    }
+  </script>
+</body>
+</html>
+
