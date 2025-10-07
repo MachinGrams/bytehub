@@ -1,91 +1,268 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Steal a Brainrot - Redeem Key</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Steal a Brainrot — Claim the Key</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Poppins', sans-serif;
+    :root{
+      --card-w: 420px;
+      --accent: #e53935;
+      --accent-dark:#b71c1c;
+      --muted: rgba(255,255,255,0.85);
+      --glass: rgba(0,0,0,0.55);
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+                   Roboto, "Helvetica Neue", Arial;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      background:black;
     }
 
-    body {
-      background: url('brainrot.png') no-repeat center center/cover;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      overflow: hidden;
+    /* full-screen blurred background using user image */
+    .bg {
+      position:fixed;
+      inset:0;
+      background: url('background.png') center/cover no-repeat;
+      filter: blur(18px) saturate(120%) contrast(95%);
+      transform: scale(1.04);
+      z-index:0;
     }
 
-    h1 {
-      font-size: 2rem;
-      color: white;
-      text-shadow: 0 0 20px #ff2e2e, 0 0 40px #ff6b6b;
-      animation: glow 2s ease-in-out infinite alternate;
+    /* dark overlay (dimming the background) */
+    .overlay {
+      position:fixed;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6));
+      z-index:1;
     }
 
-    @keyframes glow {
-      from { text-shadow: 0 0 10px #ff2e2e, 0 0 20px #ff6b6b; }
-      to { text-shadow: 0 0 30px #ff2e2e, 0 0 60px #ff6b6b; }
+    /* center container */
+    .wrap {
+      position:relative;
+      z-index:2;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:40px 20px;
     }
 
-    button {
-      margin-top: 30px;
-      padding: 15px 35px;
-      font-size: 1.2rem;
-      color: white;
-      background: linear-gradient(90deg, #ff2e2e, #ff6b6b, #ff2e2e);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      box-shadow: 0 0 20px #ff6b6b;
-      animation: moveButton 4s ease-in-out infinite;
-      transition: transform 0.3s, box-shadow 0.3s;
+    /* the modal/card */
+    .card {
+      width:var(--card-w);
+      border-radius:16px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+      box-shadow: 0 10px 40px rgba(0,0,0,0.65), inset 0 1px 0 rgba(255,255,255,0.02);
+      backdrop-filter: blur(6px) saturate(120%);
+      color:var(--muted);
+      overflow:hidden;
+      transform-origin:center;
+      animation: cardPop .6s cubic-bezier(.2,.9,.28,1);
+      border: 1px solid rgba(255,255,255,0.06);
     }
 
-    button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 0 40px #ff0000;
+    @keyframes cardPop {
+      from { transform: translateY(12px) scale(.98); opacity:0 }
+      to   { transform: translateY(0) scale(1); opacity:1 }
     }
 
-    @keyframes moveButton {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
+    .thumb {
+      width:100%;
+      height:150px;
+      display:block;
+      object-fit:cover;
+      background: linear-gradient(90deg, rgba(0,0,0,0.35), rgba(0,0,0,0.05));
+      border-bottom: 1px solid rgba(0,0,0,0.25);
     }
 
-    .fade-in {
-      opacity: 0;
-      transform: scale(0.9);
-      animation: fadeIn 1.5s ease forwards;
+    .card-body{
+      padding:18px 18px 22px 18px;
     }
 
-    @keyframes fadeIn {
-      to {
-        opacity: 1;
-        transform: scale(1);
-      }
+    .title {
+      font-weight:700;
+      color:#fff;
+      font-size:18px;
+      letter-spacing:0.6px;
+      margin-bottom:6px;
+      text-shadow: 0 2px 18px rgba(229,57,53,0.12);
+    }
+
+    .subtitle {
+      font-size:13px;
+      color: rgba(255,255,255,0.85);
+      margin-bottom:12px;
+      opacity:0.95;
+    }
+
+    .muted {
+      font-size:12px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom:14px;
+    }
+
+    /* progress bar container */
+    .progress-wrap {
+      height:10px;
+      background: rgba(255,255,255,0.06);
+      border-radius:999px;
+      overflow:hidden;
+      margin-bottom:14px;
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .progress {
+      height:100%;
+      width:0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-dark));
+      transition: width 600ms cubic-bezier(.2,.8,.2,1);
+      box-shadow: 0 6px 18px rgba(229,57,53,0.12), inset 0 -3px 12px rgba(0,0,0,0.18);
+    }
+
+    /* claim button */
+    .claim-btn {
+      display:block;
+      width:100%;
+      padding:14px 18px;
+      font-size:16px;
+      font-weight:700;
+      color:white;
+      background: linear-gradient(180deg, var(--accent), var(--accent-dark));
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      box-shadow: 0 8px 30px rgba(183,28,28,0.18), 0 2px 6px rgba(0,0,0,0.45);
+      transition: transform .18s ease, box-shadow .18s ease;
+      letter-spacing:0.6px;
+    }
+
+    .claim-btn:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 18px 50px rgba(183,28,28,0.24) }
+
+    /* small lock row */
+    .lock-row {
+      margin-top:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:13px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    .lock {
+      width:36px;
+      height:36px;
+      border-radius:8px;
+      display:inline-grid;
+      place-items:center;
+      background: rgba(0,0,0,0.25);
+      border:1px solid rgba(255,255,255,0.03);
+    }
+
+    .mini {
+      text-transform:uppercase;
+      font-size:11px;
+      color: rgba(255,255,255,0.65);
+      margin-top:10px;
+      text-align:center;
+    }
+
+    /* responsive */
+    @media (max-width:520px){
+      .card{ width:92vw; }
+      .thumb{ height:120px }
     }
   </style>
 </head>
 <body>
-  <h1 class="fade-in">Toca para reclamar tu key del script de<br> <span style="color:#ffb3b3;">Steal a Brainrot</span></h1>
-  <button class="fade-in" style="animation-delay: 0.5s;" onclick="goToLink()">🎁 Obtener Key</button>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="overlay" aria-hidden="true"></div>
+
+  <main class="wrap">
+    <section class="card" role="dialog" aria-label="Claim key card">
+      <!-- thumbnail: small framed image like the example -->
+      <img class="thumb" src="background.png" alt="Steal a Brainrot thumbnail" />
+
+      <div class="card-body">
+        <div class="title">STEAL A BRAINROT DESYNC METHOD</div>
+        <div class="subtitle">Complete the actions to unlock</div>
+
+        <!-- small muted text (no blue tags as asked) -->
+        <div class="muted">No likes or subscribe buttons — just claim your key</div>
+
+        <!-- progress bar (visual only) -->
+        <div class="progress-wrap" aria-hidden="true">
+          <div class="progress" id="progressBar"></div>
+        </div>
+
+        <!-- Claim button -->
+        <button id="claimBtn" class="claim-btn" type="button">
+          🎁 Claim the Key
+        </button>
+
+        <div class="lock-row">
+          <div class="lock" aria-hidden="true">🔒</div>
+          <div>
+            <div style="font-weight:700;color:#fff">Unlock link</div>
+            <div class="mini" id="progressText">unlock progress 0/1</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
   <script>
-    function goToLink() {
-      // efecto antes de redirigir
-      document.body.style.transition = "opacity 0.5s ease";
-      document.body.style.opacity = "0";
+    // Target URL (Roblox share link)
+    const targetUrl = "https://www.roblox.com/share?code=5c9ea9650cfc2549876b639647924806&type=Server";
+
+    // Elements
+    const claimBtn = document.getElementById('claimBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+
+    // When user clicks Claim: animate progress then redirect
+    claimBtn.addEventListener('click', async () => {
+      // disable button to avoid double-click
+      claimBtn.disabled = true;
+      claimBtn.style.cursor = 'wait';
+      claimBtn.style.filter = 'grayscale(0.02)';
+
+      // small animation sequence: fill progress
+      progressBar.style.width = '60%';
+      progressText.textContent = 'unlock progress 0/1';
+
+      // subtle pulse on card to mimic unlocking attempt
+      document.querySelector('.card').animate([
+        { transform: 'translateY(0) scale(1)' },
+        { transform: 'translateY(-6px) scale(1.005)' },
+        { transform: 'translateY(0) scale(1)' }
+      ], { duration: 700, iterations: 1, easing: 'cubic-bezier(.2,.9,.28,1)'});
+
+      // wait pseudo async time
+      await new Promise(r => setTimeout(r, 800));
+
+      // finish progress and update text
+      progressBar.style.width = '100%';
+      progressText.textContent = 'unlock progress 1/1';
+
+      // button flash
+      claimBtn.animate([
+        { boxShadow: '0 8px 30px rgba(183,28,28,0.18)' },
+        { boxShadow: '0 18px 60px rgba(229,57,53,0.28)' },
+        { boxShadow: '0 8px 30px rgba(183,28,28,0.18)' }
+      ], { duration: 700, iterations: 1 });
+
+      // short fade-out transition then redirect
+      document.body.style.transition = 'opacity 420ms ease';
+      document.body.style.opacity = '0';
       setTimeout(() => {
-        window.location.href = "https://www.roblox.com/share?code=5c9ea9650cfc2549876b639647924806&type=Server";
-      }, 500);
-    }
+        window.location.href = targetUrl;
+      }, 420);
+    });
   </script>
 </body>
 </html>
-
